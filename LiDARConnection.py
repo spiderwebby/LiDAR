@@ -3,7 +3,7 @@ import serial
 import time
 
 #Serial port variables
-SERIAL_PORT = "COM3"
+SERIAL_PORT = "COM36"
 SERIAL_BAUDRATE = 115200
 
 #Scan variables
@@ -71,7 +71,9 @@ def LiDARFrameProcessing(frame: Delta2Dv005Frame):
 				distance = (frame.parameters[5 + (i * 3) + 1] << 8) + frame.parameters[5 + (i * 3) + 2]
 				scanSamplesSignalQuality.append(signalQuality)
 				scanSamplesRange.append(distance * RANGE_SCALE)
-				print(startAngle+i*0.9,",", distance)
+				print(round((startAngle+i*0.9),2),",", distance)
+
+				
 
 			#if frameIndex <= (SCAN_STEPS - 1):
 				#Scan complete
@@ -79,8 +81,9 @@ def LiDARFrameProcessing(frame: Delta2Dv005Frame):
 
 def main():
 	try:
-		#lidarSerial = serial.Serial(SERIAL_PORT, SERIAL_BAUDRATE, timeout=0)
-		lidarSerial = open('rawcapture.dat', 'rb')
+		lidarSerial = serial.Serial(SERIAL_PORT, SERIAL_BAUDRATE, timeout=0)
+		
+		#lidarSerial = open('rawcapture.dat', 'rb')
 	except serial.serialutil.SerialException:
 		print("ERROR: Serial Connect Error")
 		return

@@ -6,7 +6,7 @@ import time
 import math
 
 #Serial port variables
-SERIAL_PORT = "COM3"
+SERIAL_PORT = "COM36"
 SERIAL_BAUDRATE = 115200
 
 #Scan variables
@@ -80,7 +80,7 @@ def LiDARFrameProcessing(frame: Delta2Dv005Frame):
 				scanSamplesSignalQuality.append(signalQuality)
 				scanSamplesRange.append(distance * RANGE_SCALE)
 
-				print(i, "," ,startAngle+i*0.9,",", distance)
+				print(round((startAngle+i*0.9),2),",", distance)
 				theta.append( math.radians(startAngle+i*0.9))
 				radius.append(distance)
 
@@ -96,14 +96,21 @@ def main():
 		print("ERROR: Serial Connect Error")
 		return
 
+	
+	fig = plt.figure()
+	ax = fig.add_subplot(projection='polar')
+	ax.set_theta_zero_location("N")
+	plt.ion()
+
+	#plt.show()
+
 	status = 0
 	checksum = 0
 	count = 0
 	lidarFrame = Delta2Dv005Frame()
-	while True:
-	#while count < 200:
-		count+=1
-		rx = lidarSerial.read(100)
+	#while True:
+	while count < 200:
+		rx = lidarSerial.read(100) 
 
 		for by in rx:
 			match status:
@@ -175,12 +182,14 @@ def main():
 						#Checksum match: Valid frame
 						LiDARFrameProcessing(lidarFrame)
 						# print(time.time)
+						count+=1
+						
+						fig.canvas.draw()
 					else:
 						#Checksum missmatach: Invalid frame
 						print("ERROR: Frame Checksum Failed");
 					status = 0
-			#Calculate current frame checksum, all bytes excluding the last 2, which are the checksum
-			if status < 10:
+			if status < 10:#Calculate current frame checksum, all bytes excluding the last 2, which are the checksum
 				checksum = (checksum + by) % 0xFFFF
 
 		# Compute areas and colors
@@ -192,12 +201,8 @@ def main():
 		area = 10
 		colors = r
 
-	fig = plt.figure()
-	ax = fig.add_subplot(projection='polar')
-	ax.set_theta_zero_location("N")
 	c = ax.scatter(theta, r, c=colors, s=area, cmap='hsv', alpha=0.75)
 	#print(radius)
-	plt.show()
 
 if __name__ == "__main__":
 	main()

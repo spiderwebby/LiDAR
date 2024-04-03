@@ -26,7 +26,11 @@ ANGLE_SCALE = 0.01			#Convert received value to degrees (LSB: 0.01 degrees)
 RANGE_SCALE = 0.25 ##  x0.001	#Convert received value to meters (LSB: 0.25 mm)
 
 
-
+plt.ion()
+fig = plt.figure()
+ax = fig.add_subplot(projection='polar')
+ax.set_theta_zero_location("N")
+plt.show()
 theta=[]
 radius=[]
 
@@ -90,19 +94,14 @@ def LiDARFrameProcessing(frame: Delta2Dv005Frame):
 
 def main():
 	try:
-		lidarSerial = serial.Serial(SERIAL_PORT, SERIAL_BAUDRATE, timeout=0)
-		#lidarSerial = open('rawcapture.dat', 'rb')
+		#lidarSerial = serial.Serial(SERIAL_PORT, SERIAL_BAUDRATE, timeout=0)
+		lidarSerial = open('rawcapture.dat', 'rb')
 	except serial.serialutil.SerialException:
 		print("ERROR: Serial Connect Error")
 		return
 
 	
-	fig = plt.figure()
-	ax = fig.add_subplot(projection='polar')
-	ax.set_theta_zero_location("N")
-	plt.ion()
 
-	#plt.show()
 
 	status = 0
 	checksum = 0
@@ -206,5 +205,3 @@ def main():
 
 if __name__ == "__main__":
 	main()
-
-

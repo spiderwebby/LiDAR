@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import numpy as np
 from socket import timeout
 import serial
@@ -27,10 +27,6 @@ ROTATION_SPEED_SCALE = 0.05 * 60	#Convert received value to RPM (LSB: 0.05 rps)
 ANGLE_SCALE = 0.01			#Convert received value to degrees (LSB: 0.01 degrees)
 RANGE_SCALE = 0.25 ##  x0.001	#Convert received value to meters (LSB: 0.25 mm)
 
-
-
-theta=[]
-radius=[]
 
 #Delta-2G frame structure
 class Delta2Dv005Frame:
@@ -84,12 +80,7 @@ def LiDARFrameProcessing(frame: Delta2Dv005Frame):
 				scanSamplesSignalQuality.append(signalQuality)
 				scanSamplesRange.append(distance * RANGE_SCALE)
 
-				#print(round((startAngle+i*0.9),2),",", distance)
-				theta.append( math.radians(startAngle+i*0.9))
-				radius.append(distance)
-				
-    #theta.append( math.radians(startAngle+i*0.9))
-				#radius.append(distance)
+				print(round((startAngle+i*0.9),2),",", distance)
 
 			#if frameIndex <= (SCAN_STEPS - 1):
 				#Scan complete
@@ -192,14 +183,3 @@ while count < 200:
                 status = 0
         if status < 10:#Calculate current frame checksum, all bytes excluding the last 2, which are the checksum
             checksum = (checksum + by) % 0xFFFF
-
-
-
-fig = plt.figure()
-ax = fig.add_subplot(projection='polar')
-ax.set_theta_zero_location("N")
-r = radius
-area = 1
-colors = r
-c = ax.scatter(theta, r, c=colors, s=area, cmap='hsv', alpha=0.75)
-plt.show()

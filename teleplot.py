@@ -11,7 +11,7 @@ teleplotAddr = ("127.0.0.1",47269)
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 #Serial port variables
-SERIAL_PORT = "COM3"
+SERIAL_PORT = "COM6"
 SERIAL_BAUDRATE = 115200
 
 #Scan variables

@@ -1,11 +1,11 @@
 # import matplotlib.pyplot as plt
 # import numpy as np
 # from socket import timeout
-import serial
 # import time
 import math
 import socket
 
+import serial
 
 TELEPLOT_ADDR = ("127.0.0.1", 47269)
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -129,7 +129,7 @@ def LiDARFrameProcessing(frame: Delta2Dv005Frame):
 try:
     lidarSerial = serial.Serial(SERIAL_PORT, SERIAL_BAUDRATE, timeout=0)
     # lidarSerial = open('rawcapture.dat', 'rb')
-except serial.serialutil.SerialException:
+except serial.serialutil.SerialException: # type: ignore
     print("ERROR: Serial Connect Error")
     quit(1)
 
